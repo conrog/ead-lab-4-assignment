@@ -1,11 +1,11 @@
 # Enterprise Applicaiton Developement - Lab 4 - Designing a Login and Registration System using Redis
 
-| Student Information |                                                                            |
-| ------------------- | -------------------------------------------------------------------------- |
-| **Number**          | C17730535                                                                  |
-| **Name**            | Conor Rogers                                                               |
-| **Date**            | 6/5/2022                                                                   |
-| **GitHub Repo**     | [https://github.com/conrog/ead-lab-4](https://github.com/conrog/ead-lab-4) |
+| Student Information |                                                                                                  |
+| ------------------- | ------------------------------------------------------------------------------------------------ |
+| **Number**          | C17730535                                                                                        |
+| **Name**            | Conor Rogers                                                                                     |
+| **Date**            | 6/5/2022                                                                                         |
+| **GitHub Repo**     | [https://github.com/conrog/ead-lab-4-assignment](https://github.com/conrog/ead-lab-4-assignment) |
 
 ## Parts Complete
 
