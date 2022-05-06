@@ -9,13 +9,14 @@
     />
 
     <!-- Optional theme -->
-    <link
+    <!-- <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"
-    />
+    /> -->
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   </head>
 
   <body>
@@ -31,9 +32,205 @@
         </p>
       </div>
     </nav>
-    <div style="margin-top: 100px; margin-left: 50px; width: 400px">
-      <h1>Hello, <%= name %></h1>
-      <h1>Email: <%= email %></h1>
+    <div class="container">
+      <h1 style="margin-top: 70px">Hello <span id="username"></span></h1>
+      <div>
+        <!-- City of Birth -->
+        <div class="input-group" style="width: 50%">
+          <label for="username-input">City of Birth</label>
+          <input
+            type="text"
+            class="form-control"
+            id="city-input"
+            placeholder="City..."
+          />
+        </div>
+        <!-- Date of Birth -->
+        <div class="input-group" style="width: 50%">
+          <label for="dob-input">Date of Birth</label>
+          <input type="date" class="form-control" id="dob-input" />
+        </div>
+        <!-- Email -->
+        <div class="input-group" style="width: 50%">
+          <label for="email-input">Email</label>
+          <input
+            type="text"
+            class="form-control"
+            id="email-input"
+            placeholder="Email..."
+          />
+        </div>
+        <!-- Address -->
+        <div class="input-group" style="width: 50%">
+          <label for="address-input">Address</label>
+          <input
+            type="text"
+            class="form-control"
+            id="address-input"
+            placeholder="Address..."
+          />
+        </div>
+        <!-- Gender -->
+        <div class="input-group" style="width: 50%">
+          <label for="gender-input">Gender</label>
+          <select id="gender-input" class="form-control">
+            <option value="" disabled selected>
+              Please Provide Your Gender
+            </option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+        <!-- Hobbies -->
+        <div class="input-group" style="width: 50%">
+          <label for="hobbies-input">Hobbies</label>
+          <input
+            type="text"
+            class="form-control"
+            id="hobbies-input"
+            placeholder="Hobbies..."
+          />
+        </div>
+        <!-- Civil State -->
+        <div class="input-group" style="width: 50%">
+          <label for="civil-state-input">Civil State</label>
+          <select id="civil-state-input" class="form-control">
+            <option value="" disabled selected>
+              Please Provide Your Civil State
+            </option>
+            <option value="single">Single</option>
+            <option value="married">Married</option>
+            <option value="divorced">Divorced</option>
+            <option value="widowed">Widowed</option>
+          </select>
+        </div>
+        <!-- Proffession -->
+        <div class="input-group" style="width: 50%">
+          <label for="profession-input">Profession</label>
+          <input
+            type="text"
+            class="form-control"
+            id="profession-input"
+            placeholder="Profession..."
+          />
+        </div>
+        <!-- Salary -->
+        <div class="input-group" style="width: 50%">
+          <label for="salary-input">Salary</label>
+          <input
+            type="text"
+            class="form-control"
+            id="salary-input"
+            placeholder="Salary..."
+          />
+        </div>
+        <!-- Picture -->
+        <div class="input-group" style="width: 50%">
+          <label for="picture-input">Picture</label>
+          <div>
+            <img
+              id="picture"
+              style="height: 150px; width: 150px; margin-bottom: 5px"
+            />
+          </div>
+          <input
+            type="file"
+            id="picture-upload"
+            accept="image/png, image/jpeg"
+            class="form-control"
+          />
+        </div>
+        <!-- Sport -->
+        <div class="input-group" style="width: 50%">
+          <label for="sport-input">Favourite Sport</label>
+          <input
+            type="text"
+            class="form-control"
+            id="sport-input"
+            placeholder="Favourite Sport..."
+          />
+        </div>
+        <div style="margin-top: 5px">
+          <button id="action-button" class="btn btn-primary">Edit</button>
+        </div>
+      </div>
     </div>
   </body>
+  <script>
+    const toBase64 = (file) =>
+      new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+      });
+
+    $(document).ready(function () {
+      $(".form-control").prop("disabled", true);
+      $("#picture").hide();
+
+      $.ajax({
+        url: "/users/user",
+        type: "GET",
+        success: (data) => {
+          for (let key in data) {
+            if (key === "picture" && data[key] !== "") {
+              $("#picture").prop("src", data[key]).show();
+            }
+            if (key === "name") {
+              $("#username").text(`${data[key]}!`);
+            } else {
+              $(`#${key}-input`).val(data[key]);
+            }
+          }
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
+    });
+
+    $("#action-button").on("click", async () => {
+      let actionButton = $("#action-button");
+
+      $(".form-control").prop("disabled", false);
+      let image = "";
+
+      if (actionButton.text() === "Edit") {
+        actionButton.text("Save Changes");
+      } else {
+        const file = $("#picture-upload").prop("files")[0];
+
+        if (file !== undefined) {
+          image = await toBase64(file);
+          $("#picture").prop("src", image);
+        }
+
+        $.ajax({
+          url: "/users/user",
+          type: "POST",
+          data: {
+            city: $("#city-input").val(),
+            dob: $("#dob-input").val(),
+            email: $("#email-input").val(),
+            address: $("#address-input").val(),
+            gender: $("#gender-input").val(),
+            hobbies: $("#hobbies-input").val(),
+            "civil-state": $("#civil-state-input").val(),
+            profession: $("#profession-input").val(),
+            salary: $("#salary-input").val(),
+            picture: image === "" ? $("#picture").prop("src") : image,
+            sport: $("#sport-input").val(),
+          },
+          success: () => {
+            if (file !== undefined) {
+              $("#picture").prop("src", image);
+            }
+            actionButton.text("Edit");
+            $(".form-control").prop("disabled", true);
+          },
+        });
+      }
+    });
+  </script>
 </html>

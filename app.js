@@ -49,7 +49,7 @@ app.use(
 
 // set static path
 app.set("views", path.join(__dirname, "/views"));
-
+app.engine("html", require("ejs").renderFile);
 
 // routes
 app.use("/", require("./routes/static"));
